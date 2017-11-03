@@ -53,7 +53,7 @@ public static void main(String[] args){
 	int[] settings = {leftRotor, middleRotor, rightRotor, leftRing, middleRing,
 			rightRing, leftGround, middleGround, rightGround};
 	String output = enc(settings, input);
-	System.out.println(output);
+	System.out.println("Output: " + output);
 }
 	
 public static String enc(int[] settings, String inputString)
@@ -69,24 +69,36 @@ public static String enc(int[] settings, String inputString)
 	int middleGround = settings[7];
 	int rightGround = settings[8];
 	
-	if(leftGround-middleRing >= 0)leftGround =-leftRing;
+	if(leftGround-leftRing >= 0)leftGround -=leftRing;
 	else leftGround = 26+(leftGround-leftRing);
 	System.out.println("leftground: "+ leftGround);
-	if(middleGround-middleRing >= 0) middleGround =- middleRing;
+	if(middleGround-middleRing >= 0) middleGround -= middleRing;
 	else middleGround = 26+(middleGround-middleRing);
 	System.out.println("middleground: " + middleGround);
-	if(rightGround-rightRing >= 0)rightGround =- rightRing;
+	if(rightGround-rightRing >= 0)rightGround -= rightRing;
 	else rightGround = 26+(rightGround-rightRing);
 	System.out.println("rightground: " +rightGround);
 	
 	char[] input = inputString.toCharArray();
 	char[] output = new char[inputString.length()];
+
 	
 	for(int i=0; i<inputString.length(); i++)
 	{
+		boolean middleTurned = false;
+		boolean rightTurned = true;
+		if(i==0) rightTurned= false;
+		rightGround= (rightGround+1)%26;
+		if(rightTurned && turnMiddle(rightRotor, rightGround)) 
+		{
+			middleGround = (middleGround+1)%26; 
+			middleTurned = true;
+		}
+		if(middleTurned && turnLeft(middleRotor, middleGround)) leftGround = (leftGround+1)%26;
+		
+		System.out.println("After the " +  (i+1) +"'th letter grund settings are: "+leftGround+" "+middleGround+" "+rightGround);
 		int c = charToInt(input[i]);
 		c = rotor(c, rightRotor, rightGround);
-		System.out.println("the inputchar after the first rotor is " + c);
 		c = rotor(c, middleRotor, middleGround);
 		c = rotor(c, leftRotor, leftGround);
 		c = ReflectorB(c);
@@ -109,46 +121,48 @@ public static int rotor(int inputChar, int rotorNumber, int GrundSetting){
 	else if(rotorNumber==6) inputRotor = Rotor6Int;
 	else if(rotorNumber==7) inputRotor = Rotor7Int;
 	else inputRotor = Rotor8Int;
-
 	//takes value and adds the grund shift value.
 	int AdjustedValue = (inputChar + GrundSetting) % 26; 
-		System.out.println("input char: " + inputChar + " adjusted value: " +AdjustedValue);
 	//takes output from array and subtracts grund shift value.
-	return (inputRotor[AdjustedValue] - GrundSetting) % 26;
+	if(inputRotor[AdjustedValue] - GrundSetting >0)
+		return (inputRotor[AdjustedValue] - GrundSetting) % 26;
+	else return (25 + (inputRotor[AdjustedValue] - GrundSetting));
 }
 	
-public static char rotorInverse(int inputChar, int rotorNumber, int grundSetting){
-	char[] Default = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-	int[] DefaultInt = new int[26];
-	for(int a = 0; a < 26 ; a++){
-		DefaultInt[a] = charToInt(Default[a]);
-	}
-	
-	//finds the correct rotor
-	int[] inputRotor;
-	if(rotorNumber==1) inputRotor = Rotor1Int; 
-	else if(rotorNumber==2) inputRotor = Rotor2Int;
-	else if(rotorNumber==3) inputRotor = Rotor3Int;
-	else if(rotorNumber==4) inputRotor = Rotor4Int;
-	else if(rotorNumber==5) inputRotor = Rotor5Int;
-	else if(rotorNumber==6) inputRotor = Rotor6Int;
-	else if(rotorNumber==7) inputRotor = Rotor7Int;
-	else inputRotor = Rotor8Int;
-	
-
-	//takes value and subtracts the grund shift value.
-	int AdjustedValue = (inputChar - grundSetting) % 26;
-			
-	int index = 0;
-	while(inputRotor[index] != AdjustedValue)
-		index++;
-	
-	//takes output from array and subtracts grund shift value.
-	return intToChar(DefaultInt[index]);
+public static int rotorInverse(int inputChar, int rotorNumber, int grundSetting){
+    char[] Default = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    int[] DefaultInt = new int[26];
+    for(int a = 0; a < 26 ; a++){
+        DefaultInt[a] = charToInt(Default[a]);
+    }
+    
+    //finds the correct rotor
+    int[] inputRotor;
+    if(rotorNumber==1) inputRotor = Rotor1Int; 
+    else if(rotorNumber==2) inputRotor = Rotor2Int;
+    else if(rotorNumber==3) inputRotor = Rotor3Int;
+    else if(rotorNumber==4) inputRotor = Rotor4Int;
+    else if(rotorNumber==5) inputRotor = Rotor5Int;
+    else if(rotorNumber==6) inputRotor = Rotor6Int;
+    else if(rotorNumber==7) inputRotor = Rotor7Int;
+    else inputRotor = Rotor8Int;
+     
+    //takes value and subtracts the grund shift value.
+    int AdjustedValue = (inputChar - grundSetting);
+    if (AdjustedValue < 0){
+        AdjustedValue = AdjustedValue + 26;
+    }
+            
+    int index = 0;
+    while(inputRotor[index] != AdjustedValue){
+        index++;
+    }
+    
+    //takes output from array and subtracts grund shift value.
+    return DefaultInt[index];
 }
 	
 public static int ReflectorB(int inputChar){	
-	System.out.println("reflector char: "+ inputChar);
 	return ReflectorInt[inputChar];
 }
 	
@@ -243,6 +257,38 @@ public static boolean checkInput(char Input){
 		}
 		
 	}
+
+/**
+ * decides whether the middle rotor should be turn based on the number and position of right rotor
+ * @return
+ */
+private static boolean turnMiddle(int rightRotor, int position)
+{
+	if((rightRotor==6||rightRotor==7||rightRotor==8)&&(position==0||position==13))
+		return true;
+	if((rightRotor==1)&&(position==17)) return true;
+	if((rightRotor==2)&&(position==5)) return true;
+	if((rightRotor==3)&&(position==22)) return true;
+	if((rightRotor==4)&&(position==10)) return true;
+	if((rightRotor==5)&&(position==0)) return true;
+	return false;
+}
+
+/**
+ * decides whether the left rotor should be turn based on the number and position of middle rotor
+ * @return
+ */
+private static boolean turnLeft(int middleRotor, int position)
+{
+	if((middleRotor==6||middleRotor==7||middleRotor==8)&&(position==0||position==13))
+		return true;
+	if((middleRotor==1)&&(position==17)) return true;
+	if((middleRotor==2)&&(position==5)) return true;
+	if((middleRotor==3)&&(position==22)) return true;
+	if((middleRotor==4)&&(position==10)) return true;
+	if((middleRotor==5)&&(position==0)) return true;
+	return false;
+}
 	
 	/**
 	 * I think we need to remove this part and update the original arrays instead to int... more efficient- Stan
