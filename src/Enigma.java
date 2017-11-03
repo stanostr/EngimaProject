@@ -33,9 +33,13 @@ public class Enigma{
  * args[3-5] ring settings, as characters, left to right
  * args[6-8] grund settings, as characters, left to right
  * args[9] input string
- * example: 1 2 3 A A B A A A wewillsolvethishavehope
+ * example: 1 2 3 A A A A A A wewillsolvethishavehope
  */
 public static void main(String[] args){
+	if(args.length<10)
+	{
+		System.out.println("Not enough argumentss passed. Read the damn comments in program."); System.exit(1);
+	}
 	int leftRotor = Integer.parseInt(args[0]);
 	int middleRotor = Integer.parseInt(args[1]);
 	int rightRotor = Integer.parseInt(args[2]);
@@ -48,10 +52,11 @@ public static void main(String[] args){
 	String input = args[9];
 	int[] settings = {leftRotor, middleRotor, rightRotor, leftRing, middleRing,
 			rightRing, leftGround, middleGround, rightGround};
-	enc(settings, input);
+	String output = enc(settings, input);
+	System.out.println(output);
 }
 	
-public static void enc(int[] settings, String input)
+public static String enc(int[] settings, String inputString)
 {
 	convertArrays();
 	int leftRotor = settings[0];
@@ -66,12 +71,27 @@ public static void enc(int[] settings, String input)
 	leftGround =-leftRing;
 	middleGround =- middleRing;
 	rightGround =- rightRing;
+	char[] input = inputString.toCharArray();
+	char[] output = new char[inputString.length()];
 	
-	
-	
+	for(int i=0; i<inputString.length(); i++)
+	{
+		
+		int c = charToInt(input[i]);
+		c = rotor(c, rightRotor, rightGround);
+		c = rotor(c, middleRotor, middleGround);
+		c = rotor(c, leftRotor, leftGround);
+		c = ReflectorB(c);
+		c = rotorInverse(c, leftRotor, leftGround);
+		c = rotorInverse(c, middleRotor, middleGround);
+		c = rotorInverse(c, rightRotor, rightGround);
+		output[i] = intToChar(c);
+	}
+	String outputString = new String(output);
+	return outputString;
 }
 	
-public static char Rotor(int inputChar, int rotorNumber, int GrundSetting){
+public static int rotor(int inputChar, int rotorNumber, int GrundSetting){
 	int[] inputRotor;
 	if(rotorNumber==1) inputRotor = Rotor1Int; 
 	else if(rotorNumber==2) inputRotor = Rotor2Int;
@@ -83,13 +103,13 @@ public static char Rotor(int inputChar, int rotorNumber, int GrundSetting){
 	else inputRotor = Rotor8Int;
 
 	//takes value and adds the grund shift value.
-	int AdjustedValue = (inputChar + GrundSetting) % 26;
+	int AdjustedValue = (inputChar + GrundSetting) % 26; 
 		
 	//takes output from array and subtracts grund shift value.
-	return intToChar((inputRotor[AdjustedValue] - GrundSetting) % 26);
+	return (inputRotor[AdjustedValue] - GrundSetting) % 26;
 }
 	
-public static char RotorInverse(int inputChar, int rotorNumber, int grundSetting){
+public static char rotorInverse(int inputChar, int rotorNumber, int grundSetting){
 	char[] Default = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 	int[] DefaultInt = new int[26];
 	for(int a = 0; a < 26 ; a++){
