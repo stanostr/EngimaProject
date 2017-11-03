@@ -38,7 +38,7 @@ public class Enigma{
 public static void main(String[] args){
 	if(args.length<10)
 	{
-		System.out.println("Not enough argumentss passed. Read the damn comments in program."); System.exit(1);
+		System.out.println("Not enough argumentss passed. Read the damn comments in program code."); System.exit(1);
 	}
 	int leftRotor = Integer.parseInt(args[0]);
 	int middleRotor = Integer.parseInt(args[1]);
@@ -68,17 +68,25 @@ public static String enc(int[] settings, String inputString)
 	int leftGround = settings[6];
 	int middleGround = settings[7];
 	int rightGround = settings[8];
-	leftGround =-leftRing;
-	middleGround =- middleRing;
-	rightGround =- rightRing;
+	
+	if(leftGround-middleRing >= 0)leftGround =-leftRing;
+	else leftGround = 26+(leftGround-leftRing);
+	System.out.println("leftground: "+ leftGround);
+	if(middleGround-middleRing >= 0) middleGround =- middleRing;
+	else middleGround = 26+(middleGround-middleRing);
+	System.out.println("middleground: " + middleGround);
+	if(rightGround-rightRing >= 0)rightGround =- rightRing;
+	else rightGround = 26+(rightGround-rightRing);
+	System.out.println("rightground: " +rightGround);
+	
 	char[] input = inputString.toCharArray();
 	char[] output = new char[inputString.length()];
 	
 	for(int i=0; i<inputString.length(); i++)
 	{
-		
 		int c = charToInt(input[i]);
 		c = rotor(c, rightRotor, rightGround);
+		System.out.println("the inputchar after the first rotor is " + c);
 		c = rotor(c, middleRotor, middleGround);
 		c = rotor(c, leftRotor, leftGround);
 		c = ReflectorB(c);
@@ -104,7 +112,7 @@ public static int rotor(int inputChar, int rotorNumber, int GrundSetting){
 
 	//takes value and adds the grund shift value.
 	int AdjustedValue = (inputChar + GrundSetting) % 26; 
-		
+		System.out.println("input char: " + inputChar + " adjusted value: " +AdjustedValue);
 	//takes output from array and subtracts grund shift value.
 	return (inputRotor[AdjustedValue] - GrundSetting) % 26;
 }
@@ -140,6 +148,7 @@ public static char rotorInverse(int inputChar, int rotorNumber, int grundSetting
 }
 	
 public static int ReflectorB(int inputChar){	
+	System.out.println("reflector char: "+ inputChar);
 	return ReflectorInt[inputChar];
 }
 	
