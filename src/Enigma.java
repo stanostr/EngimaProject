@@ -86,10 +86,8 @@ public static String enc(int[] settings, String inputString)
 	for(int i=0; i<inputString.length(); i++)
 	{
 		boolean middleTurned = false;
-		boolean rightTurned = true;
-		if(i==0) rightTurned= false;
 		rightGround= (rightGround+1)%26;
-		if(rightTurned && turnMiddle(rightRotor, rightGround)) 
+		if(i!=0 && turnMiddle(rightRotor, rightGround)) 
 		{
 			middleGround = (middleGround+1)%26; 
 			middleTurned = true;
@@ -146,22 +144,24 @@ public static int rotorInverse(int inputChar, int rotorNumber, int grundSetting)
     else if(rotorNumber==6) inputRotor = Rotor6Int;
     else if(rotorNumber==7) inputRotor = Rotor7Int;
     else inputRotor = Rotor8Int;
-     
+ 
     //takes value and subtracts the grund shift value.
-    int AdjustedValue = (inputChar - grundSetting);
-    if (AdjustedValue < 0){
-        AdjustedValue = AdjustedValue + 26;
-    }
+    int AdjustedValue = (inputChar + grundSetting) % 26;
             
     int index = 0;
     while(inputRotor[index] != AdjustedValue){
         index++;
     }
     
+    index = index - grundSetting;
+    if (index < 0){
+        index = index + 26;
+    }
+    
     //takes output from array and subtracts grund shift value.
     return DefaultInt[index];
 }
-	
+
 public static int ReflectorB(int inputChar){	
 	return ReflectorInt[inputChar];
 }
