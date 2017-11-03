@@ -4,15 +4,16 @@ public class Enigma{
 	static char[] Plug = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 
 	//initialize the 8 rotors and the default
-	static char[] Default = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};	
-	static char[] Rotor1 = new char[]{'E','K','M','F','L','G','D','Q','V','Z','N','T','O','W','Y','H','X','U','S','P','A','I','B','R','C','J'};
-	static char[] Rotor2 = new char[]{'A','J','D','K','S','I','R','U','X','B','L','H','W','T','M','C','Q','G','Z','N','P','Y','F','V','O','E'};
-	static char[] Rotor3 = new char[]{'B','D','F','H','J','L','C','P','R','T','X','V','Z','N','Y','E','I','W','G','A','K','M','U','S','Q','O'};
-	static char[] Rotor4 = new char[]{'E','S','O','V','P','Z','J','A','Y','Q','U','I','R','H','X','L','N','F','T','G','K','D','C','M','W','B'};
-	static char[] Rotor5 = new char[]{'V','Z','B','R','G','I','T','Y','U','P','S','D','N','H','L','X','A','W','M','J','Q','O','F','E','C','K'};
-	static char[] Rotor6 = new char[]{'J','P','G','V','O','U','M','F','Y','Q','B','E','N','H','Z','R','D','K','A','S','X','L','I','C','T','W'};
-	static char[] Rotor7 = new char[]{'N','Z','J','H','G','R','C','X','M','Y','S','W','B','O','U','F','A','I','V','L','P','E','K','Q','D','T'};
-	static char[] Rotor8 = new char[]{'F','K','Q','H','T','L','X','O','C','B','J','S','P','D','Z','R','A','M','E','W','N','I','U','Y','G','V'};
+	static final char[] DEFAULT = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};	
+	static final char[] ROTOR1 = new char[]{'E','K','M','F','L','G','D','Q','V','Z','N','T','O','W','Y','H','X','U','S','P','A','I','B','R','C','J'};
+	static final char[] ROTOR2 = new char[]{'A','J','D','K','S','I','R','U','X','B','L','H','W','T','M','C','Q','G','Z','N','P','Y','F','V','O','E'};
+	static final char[] ROTOR3 = new char[]{'B','D','F','H','J','L','C','P','R','T','X','V','Z','N','Y','E','I','W','G','A','K','M','U','S','Q','O'};
+	static final char[] ROTOR4 = new char[]{'E','S','O','V','P','Z','J','A','Y','Q','U','I','R','H','X','L','N','F','T','G','K','D','C','M','W','B'};
+	static final char[] ROTOR5 = new char[]{'V','Z','B','R','G','I','T','Y','U','P','S','D','N','H','L','X','A','W','M','J','Q','O','F','E','C','K'};
+	static final char[] ROTOR6 = new char[]{'J','P','G','V','O','U','M','F','Y','Q','B','E','N','H','Z','R','D','K','A','S','X','L','I','C','T','W'};
+	static final char[] ROTOR7 = new char[]{'N','Z','J','H','G','R','C','X','M','Y','S','W','B','O','U','F','A','I','V','L','P','E','K','Q','D','T'};
+	static final char[] ROTOR8 = new char[]{'F','K','Q','H','T','L','X','O','C','B','J','S','P','D','Z','R','A','M','E','W','N','I','U','Y','G','V'};
+	static final char[] REFLECTORB = new char[]{'Y','R','U','H','Q','S','L','D','P','X','N','G','O','K','M','I','E','B','F','Z','C','W','V','J','A','T'};
 
 	static int[] DefaultInt = new int[26];
 	static int[] Rotor1Int = new int[26];
@@ -23,30 +24,36 @@ public class Enigma{
 	static int[] Rotor6Int = new int[26];
 	static int[] Rotor7Int = new int[26];
 	static int[] Rotor8Int = new int[26];
+	static int[] PlugInt = new int[26];
+	static int[] ReflectorInt = new int[26];
 
+/**
+ * for this debugger enter the input as follows in console:
+ * @param args[0-2] rotor numbers, left to right 
+ * args[3-5] ring settings, as characters, left to right
+ * args[6-8] grund settings, as characters, left to right
+ * args[9] input string
+ * example: 1 2 3 A A B A A A wewillsolvethishavehope
+ */
 public static void main(String[] args){
-	
-
+	int leftRotor = Integer.parseInt(args[0]);
+	int middleRotor = Integer.parseInt(args[1]);
+	int rightRotor = Integer.parseInt(args[2]);
+	int leftRing = charToInt(args[3].charAt(0));
+	int middleRing = charToInt(args[4].charAt(0));
+	int rightRing = charToInt(args[5].charAt(0));
+	int leftGround = charToInt(args[6].charAt(0));
+	int middleGround = charToInt(args[7].charAt(0));
+	int rightGround = charToInt(args[8].charAt(0));
+	String input = args[9];
+	int[] settings = {leftRotor, middleRotor, rightRotor, leftRing, middleRing,
+			rightRing, leftGround, middleGround, rightGround};
+	enc(settings, input);
 }
 	
 public static void enc(int[] settings, String input)
 {
-	//convert them into int arrays for easier usage
-	/**
-	 * I think we need to remove this part and update the original arrays instead to int... more efficient- Stan
-	 */
-	for(int a = 0; a < 26 ; a++){
-		DefaultInt[a] = charToInt(Default[a]);
-		Rotor1Int[a] = charToInt(Rotor1[a]);
-		Rotor2Int[a] = charToInt(Rotor2[a]);
-		Rotor3Int[a] = charToInt(Rotor3[a]);
-		Rotor4Int[a] = charToInt(Rotor4[a]);
-		Rotor5Int[a] = charToInt(Rotor5[a]);
-		Rotor6Int[a] = charToInt(Rotor6[a]);
-		Rotor7Int[a] = charToInt(Rotor7[a]);
-		Rotor8Int[a] = charToInt(Rotor8[a]);
-	}
-	
+	convertArrays();
 	int leftRotor = settings[0];
 	int middleRotor = settings[1];
 	int rightRotor = settings[2];
@@ -61,44 +68,59 @@ public static void enc(int[] settings, String input)
 	rightGround =- rightRing;
 	
 	
+	
 }
 	
-public static char Rotor(char inputChar, int[] InputRotor, char GrundSetting){
-		
-	//Change the setup so that the Rotor arrays are not in main method and you just input a # from 1-8 instead and it will choose the array for you
+public static char Rotor(int inputChar, int rotorNumber, int GrundSetting){
+	int[] inputRotor;
+	if(rotorNumber==1) inputRotor = Rotor1Int; 
+	else if(rotorNumber==2) inputRotor = Rotor2Int;
+	else if(rotorNumber==3) inputRotor = Rotor3Int;
+	else if(rotorNumber==4) inputRotor = Rotor4Int;
+	else if(rotorNumber==5) inputRotor = Rotor5Int;
+	else if(rotorNumber==6) inputRotor = Rotor6Int;
+	else if(rotorNumber==7) inputRotor = Rotor7Int;
+	else inputRotor = Rotor8Int;
 
 	//takes value and adds the grund shift value.
-	int AdjustedValue = (charToInt(inputChar) + charToInt(GrundSetting)) % 26;
+	int AdjustedValue = (inputChar + GrundSetting) % 26;
 		
 	//takes output from array and subtracts grund shift value.
-	return intToChar((InputRotor[AdjustedValue] - charToInt(GrundSetting)) % 26);
+	return intToChar((inputRotor[AdjustedValue] - GrundSetting) % 26);
 }
 	
-public static char RotorInverse(char inputChar, int[] InputRotor, char GrundSetting){
+public static char RotorInverse(int inputChar, int rotorNumber, int grundSetting){
 	char[] Default = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 	int[] DefaultInt = new int[26];
 	for(int a = 0; a < 26 ; a++){
 		DefaultInt[a] = charToInt(Default[a]);
 	}
-		
-	//Change the setup so that the Rotor arrays are not in main method and you just input a # from 1-8 instead and it will choose the array for you
+	
+	//finds the correct rotor
+	int[] inputRotor;
+	if(rotorNumber==1) inputRotor = Rotor1Int; 
+	else if(rotorNumber==2) inputRotor = Rotor2Int;
+	else if(rotorNumber==3) inputRotor = Rotor3Int;
+	else if(rotorNumber==4) inputRotor = Rotor4Int;
+	else if(rotorNumber==5) inputRotor = Rotor5Int;
+	else if(rotorNumber==6) inputRotor = Rotor6Int;
+	else if(rotorNumber==7) inputRotor = Rotor7Int;
+	else inputRotor = Rotor8Int;
+	
 
 	//takes value and subtracts the grund shift value.
-	int AdjustedValue = (charToInt(inputChar) - charToInt(GrundSetting)) % 26;
+	int AdjustedValue = (inputChar - grundSetting) % 26;
 			
 	int index = 0;
-	while(InputRotor[index] != AdjustedValue)
+	while(inputRotor[index] != AdjustedValue)
 		index++;
 	
 	//takes output from array and subtracts grund shift value.
 	return intToChar(DefaultInt[index]);
 }
 	
-public static char ReflectorB(char inputChar){
-		
-	char[] RefB = new char[]{'Y','R','U','H','Q','S','L','D','P','X','N','G','O','K','M','I','E','B','F','Z','C','W','V','J','A','T'};
-		
-	return RefB[charToInt(inputChar)];
+public static int ReflectorB(int inputChar){	
+	return ReflectorInt[inputChar];
 }
 	
 public static int charToInt(char z)
@@ -164,10 +186,9 @@ public static char intToChar(int x)
 }
 	
 public static boolean checkInput(char Input){
-	char[] Default = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 	boolean Check = false;
 	for(int a = 0; a < 26 && Check == false ; a++){
-		if(Input == Default[a]){
+		if(Input == DEFAULT[a]){
 				Check = true;
 			}
 	}
@@ -192,5 +213,26 @@ public static boolean checkInput(char Input){
 			System.out.println("Not Valid Input for PlugSwag");
 		}
 		
+	}
+	
+	/**
+	 * I think we need to remove this part and update the original arrays instead to int... more efficient- Stan
+	 */
+	private static void convertArrays()
+	{
+		//convert them into int arrays for easier usage
+		for(int a = 0; a < 26 ; a++){
+			DefaultInt[a] = charToInt(DEFAULT[a]);
+			Rotor1Int[a] = charToInt(ROTOR1[a]);
+			Rotor2Int[a] = charToInt(ROTOR2[a]);
+			Rotor3Int[a] = charToInt(ROTOR3[a]);
+			Rotor4Int[a] = charToInt(ROTOR4[a]);
+			Rotor5Int[a] = charToInt(ROTOR5[a]);
+			Rotor6Int[a] = charToInt(ROTOR6[a]);
+			Rotor7Int[a] = charToInt(ROTOR7[a]);
+			Rotor8Int[a] = charToInt(ROTOR8[a]);
+			ReflectorInt[a] = charToInt(REFLECTORB[a]);
+		}
+		PlugInt = DefaultInt.clone();
 	}
 }
