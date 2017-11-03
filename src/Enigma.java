@@ -24,106 +24,116 @@ public class Enigma{
 	static int[] Rotor7Int = new int[26];
 	static int[] Rotor8Int = new int[26];
 
-	public static void main(String[] args){
-		
-		//convert them into int arrays for easier usage
-		for(int a = 0; a < 26 ; a++){
-			DefaultInt[a] = charToInt(Default[a]);
-			Rotor1Int[a] = charToInt(Rotor1[a]);
-			Rotor2Int[a] = charToInt(Rotor2[a]);
-			Rotor3Int[a] = charToInt(Rotor3[a]);
-			Rotor4Int[a] = charToInt(Rotor4[a]);
-			Rotor5Int[a] = charToInt(Rotor5[a]);
-			Rotor6Int[a] = charToInt(Rotor6[a]);
-			Rotor7Int[a] = charToInt(Rotor7[a]);
-			Rotor8Int[a] = charToInt(Rotor8[a]);
-		}
-		
+public static void main(String[] args){
+	
 
-//test input and output
-System.out.println(Rotor('D',Rotor1Int,'C'));
-System.out.println(Rotor('D',Rotor1Int,'C'));
-System.out.println(RotorInverse('E',Rotor3Int,'B'));
-System.out.println(ReflectorB('Y'));
-
-System.out.println(PlugSwap('D'));
-PlugSetup('D','Z');
-
-System.out.println(Rotor(PlugSwap('Z'),Rotor1Int,'C'));
 }
 	
-	public static char Rotor(char inputChar, int[] InputRotor, char GrundSetting){
-		
-		//Change the setup so that the Rotor arrays are not in main method and you just input a # from 1-8 instead and it will choose the array for you
-
-		//takes value and adds the grund shift value.
-		int AdjustedValue = (charToInt(inputChar) + charToInt(GrundSetting)) % 26;
-		
-		//takes output from array and subtracts grund shift value.
-		return intToChar((InputRotor[AdjustedValue] - charToInt(GrundSetting)) % 26);
-	}
-	
-	public static char RotorInverse(char inputChar, int[] InputRotor, char GrundSetting){
-		char[] Default = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-		int[] DefaultInt = new int[26];
-		for(int a = 0; a < 26 ; a++){
+public static void enc(int[] settings, String input)
+{
+	//convert them into int arrays for easier usage
+	/**
+	 * I think we need to remove this part and update the original arrays instead to int... more efficient- Stan
+	 */
+	for(int a = 0; a < 26 ; a++){
 		DefaultInt[a] = charToInt(Default[a]);
-		}
+		Rotor1Int[a] = charToInt(Rotor1[a]);
+		Rotor2Int[a] = charToInt(Rotor2[a]);
+		Rotor3Int[a] = charToInt(Rotor3[a]);
+		Rotor4Int[a] = charToInt(Rotor4[a]);
+		Rotor5Int[a] = charToInt(Rotor5[a]);
+		Rotor6Int[a] = charToInt(Rotor6[a]);
+		Rotor7Int[a] = charToInt(Rotor7[a]);
+		Rotor8Int[a] = charToInt(Rotor8[a]);
+	}
+	
+	int leftRotor = settings[0];
+	int middleRotor = settings[1];
+	int rightRotor = settings[2];
+	int leftRing = settings[3];
+	int middleRing = settings[4];
+	int rightRing = settings[5];
+	int leftGround = settings[6];
+	int middleGround = settings[7];
+	int rightGround = settings[8];
+	leftGround =-leftRing;
+	middleGround =- middleRing;
+	rightGround =- rightRing;
+	
+	
+}
+	
+public static char Rotor(char inputChar, int[] InputRotor, char GrundSetting){
 		
-		//Change the setup so that the Rotor arrays are not in main method and you just input a # from 1-8 instead and it will choose the array for you
+	//Change the setup so that the Rotor arrays are not in main method and you just input a # from 1-8 instead and it will choose the array for you
 
-		//takes value and subtracts the grund shift value.
-		int AdjustedValue = (charToInt(inputChar) - charToInt(GrundSetting)) % 26;
+	//takes value and adds the grund shift value.
+	int AdjustedValue = (charToInt(inputChar) + charToInt(GrundSetting)) % 26;
+		
+	//takes output from array and subtracts grund shift value.
+	return intToChar((InputRotor[AdjustedValue] - charToInt(GrundSetting)) % 26);
+}
+	
+public static char RotorInverse(char inputChar, int[] InputRotor, char GrundSetting){
+	char[] Default = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+	int[] DefaultInt = new int[26];
+	for(int a = 0; a < 26 ; a++){
+		DefaultInt[a] = charToInt(Default[a]);
+	}
+		
+	//Change the setup so that the Rotor arrays are not in main method and you just input a # from 1-8 instead and it will choose the array for you
+
+	//takes value and subtracts the grund shift value.
+	int AdjustedValue = (charToInt(inputChar) - charToInt(GrundSetting)) % 26;
 			
-		int index = 0;
-		while(InputRotor[index] != AdjustedValue){
-			index++;
-		}
-		
-		//takes output from array and subtracts grund shift value.
-		return intToChar(DefaultInt[index]);
-	}
+	int index = 0;
+	while(InputRotor[index] != AdjustedValue)
+		index++;
 	
-	public static char ReflectorB(char inputChar){
-		
-		char[] RefB = new char[]{'Y','R','U','H','Q','S','L','D','P','X','N','G','O','K','M','I','E','B','F','Z','C','W','V','J','A','T'};
-		
-		return RefB[charToInt(inputChar)];
-	}
+	//takes output from array and subtracts grund shift value.
+	return intToChar(DefaultInt[index]);
+}
 	
-	public static int charToInt(char z)
-	{
-		char x = Character.toUpperCase(z);
-		if(x=='A')return 0;
-		if(x=='B')return 1;
-		if(x=='C')return 2;
-		if(x=='D')return 3;
-		if(x=='E')return 4;
-		if(x=='F')return 5;
-		if(x=='G')return 6;
-		if(x=='H')return 7;
-		if(x=='I')return 8;
-		if(x=='J')return 9;
-		if(x=='K')return 10;
-		if(x=='L')return 11;
-		if(x=='M')return 12;
-		if(x=='N')return 13;
-		if(x=='O')return 14;
-		if(x=='P')return 15;
-		if(x=='Q')return 16;
-		if(x=='R')return 17;
-		if(x=='S')return 18;
-		if(x=='T')return 19;
-		if(x=='U')return 20;
-		if(x=='V')return 21;
-		if(x=='W')return 22;
-		if(x=='X')return 23;
-		if(x=='Y')return 24;
-		else return 25;
-	}
+public static char ReflectorB(char inputChar){
+		
+	char[] RefB = new char[]{'Y','R','U','H','Q','S','L','D','P','X','N','G','O','K','M','I','E','B','F','Z','C','W','V','J','A','T'};
+		
+	return RefB[charToInt(inputChar)];
+}
 	
-	public static char intToChar(int x) 
-	{
+public static int charToInt(char z)
+{
+	char x = Character.toUpperCase(z);
+	if(x=='A')return 0;
+	if(x=='B')return 1;
+	if(x=='C')return 2;
+	if(x=='D')return 3;
+	if(x=='E')return 4;
+	if(x=='F')return 5;
+	if(x=='G')return 6;
+	if(x=='H')return 7;
+	if(x=='I')return 8;
+	if(x=='J')return 9;
+	if(x=='K')return 10;
+	if(x=='L')return 11;
+	if(x=='M')return 12;
+	if(x=='N')return 13;
+	if(x=='O')return 14;
+	if(x=='P')return 15;
+	if(x=='Q')return 16;
+	if(x=='R')return 17;
+	if(x=='S')return 18;
+	if(x=='T')return 19;
+	if(x=='U')return 20;
+	if(x=='V')return 21;
+	if(x=='W')return 22;
+	if(x=='X')return 23;
+	if(x=='Y')return 24;
+	else return 25;
+}
+	
+public static char intToChar(int x) 
+{
 		x = x % 26;
 		if(x==0)return 'A';
 		if(x==1)return 'B';
@@ -151,18 +161,18 @@ System.out.println(Rotor(PlugSwap('Z'),Rotor1Int,'C'));
 		if(x==23)return 'X';
 		if(x==24)return 'Y';
 		else return 'Z';
-	}
+}
 	
-	public static boolean checkInput(char Input){
-		char[] Default = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-		boolean Check = false;
-		for(int a = 0; a < 26 && Check == false ; a++){
-			if(Input == Default[a]){
+public static boolean checkInput(char Input){
+	char[] Default = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+	boolean Check = false;
+	for(int a = 0; a < 26 && Check == false ; a++){
+		if(Input == Default[a]){
 				Check = true;
 			}
-		}
-		return Check;
 	}
+	return Check;
+}
 	
 	//Converts input into the plug swapped value.
 	public static char PlugSwap(char Input){
