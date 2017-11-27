@@ -18,8 +18,8 @@ public class SimplerEnigma {
  	* @param args[0-2] rotor numbers, left to right 
  	* args[3-5] ring settings, as characters, left to right
 	* args[6-8] grund settings, as characters, left to right
- 	* args[9] input string
- 	* example: 1 2 3 A A A A A A wewillsolvethishavehope
+ 	* args[9] input string in CAPITAL LETTERS
+ 	* example: 1 2 3 A A A A A A WEWILLBREAKTHIS
  	*/
 	public static void main(String[] args){
 		if(args.length<10)
