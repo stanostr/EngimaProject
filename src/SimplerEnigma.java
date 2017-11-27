@@ -13,6 +13,14 @@ public class SimplerEnigma {
 	static int[] Plug = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
 	static int[][] RotorTurn = new int[][]{{},{16,16},{4,4},{21,21},{9,9},{25,25},{12,25},{12,25},{12,25}};
 
+	/**
+	* for this debugger enter the input as follows in console:
+ 	* @param args[0-2] rotor numbers, left to right 
+ 	* args[3-5] ring settings, as characters, left to right
+	* args[6-8] grund settings, as characters, left to right
+ 	* args[9] input string
+ 	* example: 1 2 3 A A A A A A wewillsolvethishavehope
+ 	*/
 	public static void main(String[] args){
 		if(args.length<10)
 		{				
